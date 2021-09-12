@@ -23,19 +23,22 @@ const urlSchema = new Schema({
 });
 const URL_MODEL = mongoose.model("URL", urlSchema);
 
+let urlExtractor = function(url) {
+  var urlSplit = url.split("https://");
+  if (urlSplit[1] == undefined) {
+    return urlSplit[0].split("/")[0];
+  } else {
+    return urlSplit[1].split("/")[0];
+  }
+};
+
 app.post('/api/shorturl', (req, res) => {
 
   const originalURL = req.body.url;
-  var urlObject;
-  try{
-  urlObject = new URL(originalURL);
-  }catch(e){
-    res.json({
-      error: 'invalid url'
-    });
-  }
-  if(urlObject != undefined){
-  dns.lookup(urlObject.hostname, (err, address, family) => {
+  let extractedUrl = urlExtractor(originalURL);
+  
+  if(extractedUrl != undefined){
+  dns.lookup(extractedUrl, (err, address, family) => {
     if (err) {
       res.json({
         error: 'invalid url'
@@ -82,7 +85,7 @@ app.get('/api/shorturl/:short_url', async function (req, res) {
   })
 
   if(find_url == "" || find_url == undefined){
-    res.status(404).json("No URL found");
+    res.json("No URL found");
   }else{
     res.redirect(find_url.original_url);
   }
