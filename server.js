@@ -31,14 +31,14 @@ app.post('/api/shorturl', (req, res) => {
   urlObject = new URL(originalURL);
   }catch(e){
     res.json({
-      error: "invalid url"
+      error: 'invalid url'
     });
   }
   if(urlObject != undefined){
   dns.lookup(urlObject.hostname, (err, address, family) => {
     if (err) {
       res.json({
-        error: "invalid url"
+        error: 'invalid url'
       });
     } else {
 
