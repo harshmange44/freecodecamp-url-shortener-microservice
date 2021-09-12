@@ -34,6 +34,7 @@ app.post('/api/shorturl', (req, res) => {
       error: "invalid url"
     });
   }
+  if(urlObject != undefined){
   dns.lookup(urlObject.hostname, (err, address, family) => {
     if (err) {
       res.json({
@@ -71,6 +72,7 @@ app.post('/api/shorturl', (req, res) => {
       })
     };
   });
+}
 });
 
 app.get('/api/shorturl/:short_url', async function (req, res) {
