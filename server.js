@@ -26,8 +26,14 @@ const URL_MODEL = mongoose.model("URL", urlSchema);
 app.post('/api/shorturl', (req, res) => {
 
   const originalURL = req.body.url;
-  const urlObject = new URL(originalURL);
-
+  var urlObject;
+  try{
+  urlObject = new URL(originalURL);
+  }catch(e){
+    res.json({
+      error: "invalid url"
+    });
+  }
   dns.lookup(urlObject.hostname, (err, address, family) => {
     if (err) {
       res.json({
